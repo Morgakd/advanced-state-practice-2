@@ -2,19 +2,54 @@ import React, { Component } from "react";
 import CarListing from "./components/CarListing";
 
 class App extends Component {
-  constructor() {
+  constructor(props) {
     super();
-    this. state = {
-      currentYear:null,
-      currentMake:null,
+    this.state = {
+      currentYear:"0",
+      currentMake:"0",
     };
   }
   render() {
     const {carsForSale,vehicleData,allYears} = this.props.state;
+    var selectYear = [];
+    selectYear = allYears.map((year, index)=>{
+      return <option value={year} key={index}>{year}</option>
+    });
+
+    var selectBrand = [];
+    selectBrand = vehicleData.map((vehicle, index)=>{
+      return <option value={vehicle.value} key={index}>{vehicle.title}</option>
+    });
+
+    let currentYear = this.state.currentYear;
+    let currentMake = this.state.currentMake;
+
+    function filterListings(type){
+let CarListings = carsForSale;
+      if (currentYear==="0" && currentMake==="0"){
+        CarListings=carsForSale;
+      }
+       if (currentYear>"0"){
+       CarListings = carsForSale.filter((car)=>{
+        return car.year === type.currentYear;
+      });
+    }
+      if (currentMake>"0"){
+        CarListings = carsForSale.filter((car)=>{
+          return car.make === type.currentMake;
+        });
+    
+      }
+
+      return CarListings.map((cars)=>{
+        return <CarListing key={cars.id} cars={cars} />;
+      });
+    }
+    let carDiv = filterListings(this.state);
 
     return (
       <div >
-<div className="switcher-wrapper">	
+<div className="switcher-wrapper">
     <div className="demo_changer">
         <div className="demo-icon customBgColor"><i className="fa fa-cog fa-spin fa-2x"></i></div>
         <div className="form_holder">
@@ -163,7 +198,8 @@ class App extends Component {
           </div>
         </div>
         <div className="row">
-        <CarListing />
+        {/*CarListings*/}
+      {carDiv}
         </div>
         <div className="pagination">
           <ul>
@@ -175,7 +211,7 @@ class App extends Component {
           </ul>
         </div>
       </div>
-    
+
       <aside className="col-md-3 col-md-pull-9">
         <div className="sidebar_widget">
           <div className="widget_heading">
@@ -184,16 +220,21 @@ class App extends Component {
           <div className="sidebar_filter">
             <form action="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#" method="get">
               <div className="form-group select">
-                <select className="form-control">
-                  <option>Select Year</option>
-                  <option>2017</option>
-                  <option>2016</option>
-                  <option>2015</option>
-                  <option>2014</option>
-                  <option>2013</option>
-                  <option>2012</option>
-                  <option>2011</option>
-                  <option>2010</option>
+                <select  className="form-control" onChange={
+                  (e)=>{
+
+                  this.setState(
+                    {
+                      currentYear:e.target.value
+                    }
+                  );
+
+
+                }
+              }>
+                <option>Select Year</option>
+                {selectYear}
+
                 </select>
               </div>
               <div className="form-group select">
@@ -210,16 +251,16 @@ class App extends Component {
                 </select>
               </div>
               <div className="form-group select">
-                <select className="form-control">
-                  <option>Select Brand</option>
-                  <option>Audi</option>
-                  <option>BMW</option>
-                  <option>Nissan</option>
-                  <option>Toyota</option>
-                  <option>Volvo</option>
-                  <option>Mazda</option>
-                  <option>Mercedes-Benz</option>
-                  <option>Lotus</option>
+                <select className="form-control" onChange={(e)=>{
+                  this.setState(
+                    {
+                      currentMake:e.target.value
+                    }
+                  );
+
+                }}>
+                <option>Select Brand</option>
+                {selectBrand}
                 </select>
               </div>
               <div className="form-group select">
@@ -338,10 +379,10 @@ class App extends Component {
               <img src="./brand-logo-4.png" className="img-responsive" alt="image" /></a></div></div><div className="owl-item" style={{width: "204px"}}>
                 <div><a href="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#"><img src="./brand-logo-5.png" className="img-responsive" alt="image" /></a></div>
                 </div></div></div>
-        
-        
-        
-        
+
+
+
+
       <div className="owl-controls clickable" style={{display: "block"}}><div className="owl-pagination"><div className="owl-page"><span className=""></span></div><div className="owl-page active"><span className=""></span></div></div></div></div>
     </div>
   </div>
@@ -463,7 +504,7 @@ class App extends Component {
         </div>
       </div>
       <div className="modal-footer text-center">
-        <p>Don't have an account? <a href="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#signupform" data-toggle="modal" data-dismiss="modal">Signup Here</a></p>
+        <p>"Don't have an account? "<a href="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#signupform" data-toggle="modal" data-dismiss="modal">Signup Here</a></p>
         <p><a href="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#forgotpassword" data-toggle="modal" data-dismiss="modal">Forgot Password ?</a></p>
       </div>
     </div>
@@ -538,7 +579,7 @@ class App extends Component {
                 </div>
               </form>
               <div className="text-center">
-                <p className="gray_text">For security reasons we don't store your password. Your password will be reset and a new one will be send.</p>
+                <p className="gray_text">"For security reasons we don't store your password. Your password will be reset and a new one will be send."</p>
                 <p><a href="http://themes.webmasterdriver.net/carforyou/demo/listing-grid.html#loginform" data-toggle="modal" data-dismiss="modal"><i className="fa fa-angle-double-left" aria-hidden="true"></i> Back to Login</a></p>
               </div>
             </div>
